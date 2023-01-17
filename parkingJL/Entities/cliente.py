@@ -1,25 +1,21 @@
 class Cliente:
-    nombre = ""
-    matricula = ""
 
-    def __init__(self,nombre,matricula):
-        self.nombre = nombre
-        self.matricula = matricula
+    def __init__(self,tipo,matricula):
+        self._tipo = tipo
+        self._matricula = matricula
 
-    def __str__(self):
-        return f"NOMBRE\t\t {self.nombre}\n" \
-               f"MATRÍCULA\t {self.matricula}\n"
+        @property
+        def matricula(self):
+            return self.__matricula
 
+        @matricula.setter
+        def matricula(self, matricula):
+            self.__matricula = matricula
 
+        @property
+        def tipo(self):
+            return self.__tipo
 
-class Abonado(Cliente):
-    plaza = 0
-
-    def __str__(self):
-        return f"NOMBRE\t\t {self.nombre}\n" \
-               f"MATRÍCULA\t {self.matricula}\n" \
-               f"PLAZA\t {self.plaza}\n"
-
-
-
-
+        @tipo.setter
+        def tipo(self, tipo):
+            self.__tipo = tipo
