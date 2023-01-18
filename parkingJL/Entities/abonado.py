@@ -14,6 +14,9 @@ class Abonado:
         self.__plaza = plaza
         self.__pin = pin
 
+    def __str__(self):
+        return
+
     @property
     def dni(self):
         return self.__dni
@@ -63,19 +66,19 @@ class Abonado:
         self.__tipoAbono = tipoAbono
 
     @property
-    def fechaSuscripcion(self):
-        return self.__fechaSuscripcion
+    def fechaSubs(self):
+        return self.__fechaSubs
 
-    @fechaSuscripcion.setter
-    def fechaSuscripcion(self, fechaSuscripcion):
-        self.__fechaSuscripcion = fechaSuscripcion
+    @fechaSubs.setter
+    def fechaSubs(self, fechaSubs):
+        self.__fechaSubs = fechaSubs
 
     @property
-    def fechaCancelacion(self):
-        return self.__fechaCancelacion
+    def fechaCanc(self):
+        return self.__fechaCanc
 
-    @fechaCancelacion.setter
-    def fechaCancelacion(self, fechaCancelacion):
+    @fechaCanc.setter
+    def fechaCanc(self, fechaCanc):
         self.__fechaCancelacion = fechaCancelacion
 
     @property

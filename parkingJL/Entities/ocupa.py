@@ -10,9 +10,6 @@ class Ocupa:
         self.__activo = activo
         self.__costeTotal = costeTotal
 
-    def __str__(self):
-        return f"Entrada: {self.entrada}, Matrícula del vehículo: {self.cliente.matricula}, Clave pin: {self.pin}"
-
     @property
     def plaza(self):
         return self.__plaza

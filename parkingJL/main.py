@@ -1,16 +1,31 @@
-# This is a sample Python script.
-
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+from Views.views import Views
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def Main():
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    i = ''
+
+    print(Views.inicio())
+    i = input()
+
+    if (i == 1):
+        print(Views.menuCliente())
+        i = input()
+        if (i == 1):
+
+        elif (i == 2):
+
+        elif (i == 3):
+
+        elif (i == 4):
+
+        elif (i == 5):
+
+
+    elif (i == 2):
+        pass
+    else:
+        pass
+

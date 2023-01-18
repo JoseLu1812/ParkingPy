@@ -1,21 +1,24 @@
 class Cliente:
 
-    def __init__(self,tipo,matricula):
-        self._tipo = tipo
+    def __init__(self,tipoVehiculo,matricula):
+        self._tipoVehiculo = tipoVehiculo
         self._matricula = matricula
 
-        @property
-        def matricula(self):
+    def __str__(self):
+        return
+
+    @property
+    def matricula(self):
             return self.__matricula
 
-        @matricula.setter
-        def matricula(self, matricula):
+    @matricula.setter
+    def matricula(self, matricula):
             self.__matricula = matricula
 
-        @property
-        def tipo(self):
-            return self.__tipo
+    @property
+    def tipoVehiculo(self):
+            return self.__tipoVehiculo
 
-        @tipo.setter
-        def tipo(self, tipo):
-            self.__tipo = tipo
+    @tipoVehiculo.setter
+    def tipo(self, tipoVehiculo):
+            self.__tipoVehiculo = tipoVehiculo

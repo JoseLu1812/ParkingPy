@@ -1,33 +1,33 @@
 class Plaza:
 
     def __init__(self, numero, tipoPlaza, disponibilidad):
-        self._numero = numero
-        self._tipoPlaza = tipoPlaza
-        self._disponibilidad = disponibilidad
+        self.__numero = numero
+        self.__tipoPlaza = tipoPlaza
+        self.__disponibilidad = disponibilidad
 
     def __str__(self):
-        return "Plaza Nº" + self._num + ", Para" + self._tipoPlaza + ". \nDisponibilidad: " + self._disponibilidad + "."
+        return f"Plaza Nº" + self.__num + ", Para" + self.__tipoPlaza + ". \nDisponibilidad: " + self.__disponibilidad + "."
 
     @property
     def numero(self):
-        return self._numero
+        return self.__numero
 
     @numero.setter
     def numero(self, numero):
-        self._numero = numero
+        self.__numero = numero
 
     @property
     def tipoPlaza(self):
-        return self._tipoPlaza
+        return self.__tipoPlaza
 
     @numero.setter
     def tipoPlaza(self, tipoPlaza):
-        self._tipoPlaza = tipoPlaza
+        self.__tipoPlaza = tipoPlaza
 
     @property
     def disponiblidad(self):
-        return self._disponiblidad
+        return self.__disponiblidad
 
     @numero.setter
     def disponiblidad(self, disponiblidad):
-        self._disponiblidad = disponiblidad
+        self.__disponiblidad = disponiblidad

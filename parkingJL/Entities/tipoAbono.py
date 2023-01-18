@@ -1,7 +1,7 @@
 class TipoAbono:
 
-    def __init__(self, tipo, precio, caducidad):
-        self.__tipo = tipo
+    def __init__(self, nombre, precio, caducidad):
+        self.__nombre = nombre
         self.__precio = precio
         self.__caducidad = caducidad
 
@@ -18,16 +18,16 @@ class TipoAbono:
 
     @property
     def precio(self):
-        return self._precio
+        return self.__precio
 
     @precio.setter
     def precio(self, precio):
-        self._precio = precio
+        self.__precio = precio
 
     @property
     def caducidad(self):
-        return self._caducidad
+        return self.__caducidad
 
     @caducidad.setter
     def caducidad(self, caducidad):
-        self._caducidad = caducidad
+        self.__caducidad = caducidad
