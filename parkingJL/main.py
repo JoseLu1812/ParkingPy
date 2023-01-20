@@ -30,7 +30,7 @@ archivoCliente.close()
 archivoOcupa.close()
 
 
-def Main():
+def main():
 
     i = -1
 
@@ -109,7 +109,7 @@ def Main():
                     Views.imrpimirAbonados(abonados)
 
                 elif y == 4:
-                    Views.imprimirMenuAbonados()
+                    Views.menuAbonados()
                     try:
                         y2 = int(input())
                     except:
@@ -128,7 +128,7 @@ def Main():
                             tipoAbono = abonos[int(input()) - 1]
                             visa = input("Tarjeta de Crédito: ")
 
-                            Views.printMenuTipoVehiculo()
+                            Views.menuTipoVehiculo()
                             tipoVehiculo = list(TipoVehiculo)[int(input()) - 1]
                             matricula = input("Matrícula: ")
                             plaza = next(plaza for plaza in plazas if plaza.estado == Disponibilidad.LIBRE and plaza.tipoPlaza.tipo == tipoVehiculo)
@@ -146,7 +146,7 @@ def Main():
                         try:
                             abonado = next(cliente for cliente in clientes if
                                            isinstance(cliente, Abonado) and cliente.activo and cliente.dni == dni)
-                            Views.imprimirMenuModifAbonado()
+                            Views.menuModifAbonado()
                             y3 = int(input())
 
                             try:
@@ -179,6 +179,44 @@ def Main():
                             print('DNI no encontrado o no válido...')
                             print('Introduzca un DNI de nuevo: ')
 
-        else:
-            pass
+                    elif y2 == 3:
+                        dni = input("Indique el DNI: ")
+                        try:
+                            abonado = next(
+                                cliente for cliente in clientes if isinstance(cliente, Abonado) and cliente.dni == dni)
+                            if abonado.activo:
+                                Views.imprimirConfirmarBaja()
+                                i = int(input())
+                                if i == 1:
+                                    abonado.plaza = [plaza for plaza in plazas if plaza.id == abonado.plaza.id][0]
+                                    abonado.plaza.estado = Disponibilidad.LIBRE
+                                    print("Cliente dado de baja...")
+                            else:
+                                print("El cliente indicado no consta de ningún abono...")
+                        except:
+                            print("Cliente no encontrado...")
+
+                elif y == 5:
+                    Views.menuCadAbonos()
+                    try:
+                        y2 = int(input())
+                    except:
+                        print("Por favor introduzca un número.")
+
+                    if y2 == 1:
+                        month = int(input("Indique el nº del mes que quiere consultar: "))
+                        year = int(input("Indique el año que quiere consultar: "))
+                        aCaducar = [cliente for cliente in clientes if isinstance(cliente, Abonado) and cliente.fechaCanc.month == month and cliente.fechaCanc.year == year]
+                        Views.imprimirClientesACaducar(aCaducar)
+                        if len(aCaducar) == 0: print("No hay ningún cliente cuyo abono caduque en ese mes.")
+
+                    elif y2 == 2:
+                        aCaducar = [cliente for cliente in clientes if isinstance(cliente, Abonado) and cliente.fechaCanc > datetime.now() and cliente.fechaCanc < datetime.now() + timedelta(days = 10)]
+                        Views.imprimirClientesACaducar(aCaducar)
+                        if len(aCaducar) == 0: print("No hay ningún cliente cuyo abono caduque en 10 días.")
+
+
+
+mainThread = Thread(target=main())
+mainThread.start()
 
