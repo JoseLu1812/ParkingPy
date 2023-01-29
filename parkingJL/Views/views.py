@@ -5,8 +5,8 @@ class Views:
             '0. Salir\n' +
             '1. Zona Cliente.\n' +
             '2. Zona Administración\n\n')
-    def menuCliente(self):
 
+    def menuCliente(self):
         print('¿Qué operación desea realizar?\n\n' +
               '0. Salir\n' +
               '1. Depositar vehículo\n' +
@@ -93,7 +93,14 @@ class Views:
                 f"- Suscripcion. {cliente.tipoAbono.nombre} " +
                 f"- Fecha de Cancelación: {cliente.fechaCancelacion.strftime('%d de %B del %Y')}")
 
-
+    def imprimirPlazasDisp(plazasDisp, turismoDisp, motosDisp, movRedDisp):
+        print(f"Hay un total de {len(plazasDisp)} plazas disponibles.")
+        print(
+            f"- Plazas para Tursimos: {disponiblesTurismo}" if disponiblesTurismo > 0 else "- Plazas para Turismos: o")
+        print(
+            f"- Plazas para Motos: {disponiblesMotos}" if disponiblesMotos > 0 else "- Plazas para Motos: 0")
+        print(
+            f"- Plazas para Personas de Movilidad Reducida: {disponiblesReducidas}" if disponiblesReducidas > 0 else "- Plazas para Personas de Movilidad Reducidad: 0:")
 
 
 

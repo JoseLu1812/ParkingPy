@@ -1,33 +1,71 @@
 from datetime import datetime, timedelta
 import random
-import time
 import pickle
+import time
+from threading import Thread
 
 from Entities.abonado import Abonado
 from Entities.cliente import Cliente
 from Entities.disponibilidad import Disponibilidad
 from Entities.ocupa import Ocupa
-from Entities.plaza import Plaza
-from Entities.tipoAbono import TipoAbono
-from Entities.tipoPlaza import TipoPlaza
 from Entities.tipoVehiculo import TipoVehiculo
 from Views.views import Views
 
 
-archivoAbono = open("Datos/tiposAbono.pickle", "rb")
-archivoPlaza = open("Datos/plaza.pickle", "rb")
-archivoCliente = open("Datos/cliente.pickle", "rb")
-archivoOcupa = open("Datos/ocupa.pickle", "rb")
+archivoAbono = open("Datos/tipoAbono.p", "rb")
+archivoPlaza = open("Datos/plaza.p", "rb")
+archivoCliente = open("Datos/cliente.p", "rb")
+archivoOcupa = open("Datos/ocupa.p", "rb")
+archivoTipoPlaza = open("Datos/tipoPlaza.p", "rb")
+
 
 abonos = pickle.load(archivoAbono)
 plazas = pickle.load(archivoPlaza)
 clientes = pickle.load(archivoCliente)
 ocupas = pickle.load(archivoOcupa)
+tipoPlazas = pickle.load(archivoTipoPlaza)
+
 
 archivoAbono.close()
 archivoPlaza.close()
 archivoCliente.close()
 archivoOcupa.close()
+archivoTipoPlaza.close()
+
+
+def persistCollections():
+    on = True
+    while on:
+        i=0
+        while i < 300:
+            if mainThread.is_alive():
+                time.sleep(1)
+                i += 1
+            else:
+                i = 300
+                on = False
+
+        open("Persistence/tipoAbono.p", "w").close()
+        open("Persistence/ocupa.p", "w").close()
+        open("Persistence/plaza.p", "w").close()
+        open("Persistence/cliente.p", "w").close()
+        open("Persistence/tipoPlaza.p", "w").close()
+
+        archivoAbono = open("Persistence/tipoAbonos.pickle", "wb")
+        pickle.dump(abonos, archivoAbono)
+        archivoAbono.close()
+        archivoTipoPlaza = open("Persistence/tipoVehiculo.p", "wb")
+        pickle.dump(tipoPlazas, archivoTipoPlaza)
+        archivoTipoPlaza.close()
+        archivoPlaza = open("Persistence/plaza.p", "wb")
+        pickle.dump(plazas, archivoPlaza)
+        archivoPlaza.close()
+        archivoOcupa = open("Persistence/ocupa.p", "wb")
+        pickle.dump(ocupas, archivoOcupa)
+        archivoOcupa.close()
+        archivoCliente = open("Persistence/cliente.p", "wb")
+        pickle.dump(clientes, archivoCliente)
+        archivoCliente.close()
 
 
 def main():
@@ -49,21 +87,84 @@ def main():
             print('Indique un número válido: ')
 
         if select == 1:
-            Views.menuCliente()
-            x = input()
-            if x == 1:
 
-            elif x == 2:
+            while x != 0:
+                Views.menuCliente()
 
-            elif x == 3:
+                try:
+                    x = input()
+                except:
+                    print('Indique un número válido: ')
 
-            elif x == 4:
+                if x == 1:
+                    plazasDisp = [plaza for plaza in plazas if plaza.estado == Disponibilidad.LIBRE]
+                    turismoDisp = len([plaza for plaza in plazasDisp if plaza.tipoPlaza.tipo == TipoVehiculo.TURISMO])
+                    motosDisp = len([plaza for plaza in plazasDisp if plaza.tipoPlaza.tipo == TipoVehiculo.MOTOCICLETA])
+                    movRedDisp = len([plaza for plaza in plazasDisp if plaza.tipoPlaza.tipo == TipoVehiculo.MOVILIDAD_REDUCIDA])
+                    if len(plazasDisp) > 0:
+                        Views.imprimirPlazasDisp(plazasDisp, turismoDisp, motosDisp, movRedDisp)
+                        Views.menuTipoVehiculo()
+                        try:
+                            x2 = list(TipoVehiculo)[int(input()) - 1]
+                            if (x2 == TipoVehiculo.TURISMO and turismoDisp > 0) or (x2 == TipoVehiculo.MOTOCICLETA and motosDisp > 0) or (x2 == TipoVehiculo.MOVILIDAD_REDUCIDA and movRedDisp > 0) :
+                                matricula = input("Introduzca su matrícula: ")
+                                plaza = [plaza for plaza in plazasDisp if plaza.tipoPlaza.tipo == tipoVehiculo][0]
+                                plaza.estado = Disponibilidad.OCUPADA
+                                plazaOcupada = Ocupa(plaza, Cliente(matricula, tipoVehiculo), random.randint(100000, 999999))
+                                ocupas.append(plazaOcupada)
+                                print(f"- Matricula: {plazaOcupada.cliente.matricula}")
+                                print(f"- Id: {plazaOcupada.plaza.numero}")
+                                print(f"- Pin: {plazaOcupada.pin}")
+                            else:
+                                print("No hay plazas disponibles")
+                        except:
+                            print("Introduzca una opción válida")
+                    else:
+                        print("No hay plazas disponibles")
 
-            elif x == 5:
+                elif x == 2:
+                    try:
+                        matricula = input("Introduzca su matrícula: ")
+                        numPlaza = int(input("Escriba el número de plaza: "))
+                        pin = int(input("Pin: "))
+                        ocupas = [ocupa for ocupa in ocupas if ocupa.plaza.numero == numPlaza and ocupa.cliente.matricula == matricula and ocupa.pin == pin]
+                        if(len(ocupa) >= 1):
+                            ocupa = ocupas[0]
+                            ocupa.activo = False
+                            ocupa.salida = datetime.now()
+                            tiempo = divmod((ocupa.salida - ocupa.entrada).total_seconds(), 60)[0]
+                            ocupa.costeTotal = ocupa.plaza.tipoPlaza.tarifa * tiempo
+                            ocupa.plaza.estado = Disponibilidad.LIBRE
+                            print(f"- Coste final: {ocupa.costeTotal}€")
+                        else:
+                            print("No se encuentra el vehículo...")
+                    except:
+                        print("Datos erróneos. Indiquelos de nuevo: ")
 
-            else:
-                pass
+                elif x == 3:
+                    dni = input("Introduzca su dni: ")
+                    matricula = input("Escriba su matrícula: ")
+                    try:
+                        cliente = next(cliente for cliente in clientes if isinstance(cliente, Abonado) and cliente.activo and cliente.matricula == matricula and cliente.dni == dni)
+                        print(f"Adelante...")
+                        print(f"Su plaza es: {cliente.plaza.numero}")
+                        cliente.plaza = [plaza for plaza in plazas if plaza.numero == cliente.plaza.numero][0]
+                        cliente.plaza.disponilidad = Disponibilidad.ABONO_OCUPADA
+                        ocupas.append(Ocupa(cliente.plaza, cliente, cliente.pin, costeTotal=0))
+                    except:
+                        print("Vehículo no encontrado...")
 
+                elif x == 4:
+                    dni = input("Introduzca su dni: ")
+                    matricula = input("Escriba su matrícula: ")
+                    pin = input("Pin: ")
+                    try:
+                        ocupa = next(ocupa for ocupa in ocupas if ocupa.activo and ocupa.pin == int(pin) and ocupa.cliente.matricula == matricula and ocupa.cliente.dni == dni)
+                        print("¡Hasta luego. Vuelva pronto!")
+                        cliente.plaza.disponibilidad = Disponibilidad.ABONO_LIBRE
+                        ocupa.activo = False
+                    except:
+                        print("Vehículo no encontrado...")
 
         elif select == 2:
             Views.menuAdministrador()
@@ -72,6 +173,7 @@ def main():
                     y = int(input())
                 except:
                     print('Indique un número válido: ')
+
                 if y == 1:
                     plazasDisp = len([plaza for plaza in plazas if plaza.estado == Disponibilidad.LIBRE])
                     porcentaje = (200 - plazasDisp) / (200 / 100)
@@ -167,7 +269,7 @@ def main():
                                         f"- Tarjeta actual: {abonado.tarjeta}): ") or abonado.tarjeta
 
                                 elif y3 == 2:
-                                    cadAntigua = abonado.fechaCancelacion
+                                    cadAntigua = abonado.fechaCanc
                                     abonado.fechaCanc = cadAntigua + timedelta(
                                         days=30 * abonado.tipoAbono.caducidad)
                                     print(f"El Abono {abonado.tipoAbono.tipo} a nombre de {abonado.nombre} {abonado.apellidos} ha sido actualizado.")
@@ -185,7 +287,7 @@ def main():
                             abonado = next(
                                 cliente for cliente in clientes if isinstance(cliente, Abonado) and cliente.dni == dni)
                             if abonado.activo:
-                                Views.imprimirConfirmarBaja()
+                                Views.confirmarBaja()
                                 i = int(input())
                                 if i == 1:
                                     abonado.plaza = [plaza for plaza in plazas if plaza.id == abonado.plaza.id][0]
@@ -216,7 +318,8 @@ def main():
                         if len(aCaducar) == 0: print("No hay ningún cliente cuyo abono caduque en 10 días.")
 
 
-
-mainThread = Thread(target=main())
+mainThread = Thread(target=main)
+persistenceThread = Thread(target=persistCollections)
 mainThread.start()
+persistenceThread.start()
 

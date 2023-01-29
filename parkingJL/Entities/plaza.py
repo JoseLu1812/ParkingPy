@@ -1,6 +1,7 @@
+from Entities.disponibilidad import Disponibilidad
 class Plaza:
 
-    def __init__(self, numero, tipoPlaza, disponibilidad):
+    def __init__(self, numero, tipoPlaza, disponibilidad = Disponibilidad.LIBRE):
         self.__numero = numero
         self.__tipoPlaza = tipoPlaza
         self.__disponibilidad = disponibilidad

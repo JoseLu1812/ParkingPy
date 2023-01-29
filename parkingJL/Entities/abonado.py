@@ -1,4 +1,7 @@
-class Abonado:
+from Entities.cliente import Cliente
+
+
+class Abonado(Cliente):
 
     def __init__(self, pin, matricula, nombre, apellidos, dni, visa, tipoAbono, tipovehiculo, plaza, email, fechaSubs, fechaCanc):
         super().__init__(matricula, tipovehiculo)
@@ -79,7 +82,7 @@ class Abonado:
 
     @fechaCanc.setter
     def fechaCanc(self, fechaCanc):
-        self.__fechaCancelacion = fechaCancelacion
+        self.__fechaCanc = fechaCanc
 
     @property
     def activo(self):

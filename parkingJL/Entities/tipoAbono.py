@@ -9,12 +9,12 @@ class TipoAbono:
         return
 
     @property
-    def tipo(self):
-        return self.__tipo
+    def nombre(self):
+        return self.__nombre
 
-    @tipo.setter
-    def tipo(self, tipo):
-        self.__tipo = tipo
+    @nombre.setter
+    def tipo(self, nombre):
+        self.__nombre = nombre
 
     @property
     def precio(self):
